@@ -1,6 +1,7 @@
 //An array which contains the computers choices in the game
 const gameChoices = ["rock", "paper", "scissors"];
 
+
 //Determine the random choice by selecting a number between 0 and 2. This refers to an index in the array
 function getComputerChoice() {
   let computerChoice = gameChoices[Math.floor(Math.random() * 3)];
@@ -15,9 +16,31 @@ function getPlayerChoice() {
   return playerChoice.toLowerCase();
 }
 
-// function playGame(playerChoice, computerChoice) {
-//     if (playerChoice.toLowerCase() == 'rock')
-// }
+function whoWins () {
+    let computerChoice = getComputerChoice();
+    let playerChoice = getPlayerChoice();
+    // let computerChoiceMessage = `Computer chose ${getComputerChoice()}.`;
+    //Player Wins
+    if ((computerChoice == 'rock' && playerChoice == 'paper')
+    || (computerChoice == 'paper' && playerChoice == 'scissors') 
+    || (computerChoice == 'scissors' && playerChoice == 'rock')) {
+        return console.log(`Computer chose ${computerChoice}` + ' You win! :)');
+    }
+    //a tie
+    else if (computerChoice == playerChoice) {
+        return console.log(`Computer chose ${computerChoice}` + ' Its a tie! :/');
+    }
+    else {
+        return console.log(`Computer chose ${computerChoice}` + ' You lose! :(');
+    }
+}
 
-// console.log(getComputerChoice())
-console.log(getPlayerChoice());
+function playGame() {
+  whoWins();
+  whoWins();
+  whoWins();
+  whoWins();
+  whoWins();
+}
+
+playGame();
