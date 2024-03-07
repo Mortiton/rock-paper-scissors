@@ -18,20 +18,22 @@ function getPlayerChoice() {
 
 function whoWins () {
     let computerChoice = getComputerChoice();
+    console.log(computerChoice);
     let playerChoice = getPlayerChoice();
-    // let computerChoiceMessage = `Computer chose ${getComputerChoice()}.`;
+    console.log(playerChoice);
+    
     //Player Wins
     if ((computerChoice == 'rock' && playerChoice == 'paper')
     || (computerChoice == 'paper' && playerChoice == 'scissors') 
     || (computerChoice == 'scissors' && playerChoice == 'rock')) {
-        return console.log(`Computer chose ${computerChoice}` + ' You win! :)');
+        return console.log(`Computer chose ${computerChoice}.` + ' You win! :)');
     }
     //a tie
     else if (computerChoice == playerChoice) {
-        return console.log(`Computer chose ${computerChoice}` + ' Its a tie! :/');
+        return console.log(`Computer chose ${computerChoice}.` + ' Its a tie! :/');
     }
     else {
-        return console.log(`Computer chose ${computerChoice}` + ' You lose! :(');
+        return console.log(`Computer chose ${computerChoice}.` + ' You lose! :(');
     }
 }
 
