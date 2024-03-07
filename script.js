@@ -16,11 +16,12 @@ function getPlayerChoice() {
   return playerChoice.toLowerCase();
 }
 
+//determine the outcome based on computer and player choices
 function whoWins () {
     let computerChoice = getComputerChoice();
-    console.log(computerChoice);
+    // console.log(computerChoice);
     let playerChoice = getPlayerChoice();
-    console.log(playerChoice);
+    // console.log(playerChoice);
     
     //Player Wins
     if ((computerChoice == 'rock' && playerChoice == 'paper')
@@ -39,10 +40,10 @@ function whoWins () {
 
 function playGame() {
   whoWins();
-  whoWins();
-  whoWins();
-  whoWins();
-  whoWins();
 }
 
+playGame();
+playGame();
+playGame();
+playGame();
 playGame();
