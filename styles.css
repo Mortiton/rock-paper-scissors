@@ -6,7 +6,7 @@
 body {
     font-family: "Silkscreen", serif;
     background-color: black;
-    overflow:hidden;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,10 +16,9 @@ body {
     color: white;
 }
 
-#header {
-}
 
-#game-background {
+
+#game-container {
     background-image: url('./images/rps-background.png');
     background-size: auto;
     background-position: center top;
