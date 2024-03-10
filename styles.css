@@ -1,8 +1,41 @@
+@font-face {
+    font-family: "Silkscreen";
+    src: url('./fonts/slkscr.ttf')
+  }
+
 body {
+    font-family: "Silkscreen", serif;
     background-color: black;
+    overflow:hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    color: white;
+}
+
+#header {
+}
+
+#game-background {
     background-image: url('./images/rps-background.png');
     background-size: auto;
     background-position: center top;
     background-repeat: no-repeat;
-    overflow:hidden;
+    width: 1400px;
+    height: 1000px;
+    margin: 0;
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
+
+#text {
+    margin: 100px 0;
+    font-size: 24px;
+    color: white;
+}
+

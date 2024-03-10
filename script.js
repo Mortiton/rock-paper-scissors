@@ -42,3 +42,19 @@ function playGame() {
   whoWins();
 }
 
+//typing effect
+
+let charIndex = 0;
+
+const speed = 50;
+
+function typeWriter(text) {
+  if (charIndex < text.length) {
+    const typedText = document.querySelector("#typed-text");
+    typedText.textContent += text.charAt(charIndex)
+    charIndex++;
+    setTimeout(() => typeWriter(text), speed);
+  }
+}
+
+typeWriter("Do you want to play a game?")
