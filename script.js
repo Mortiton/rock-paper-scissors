@@ -42,8 +42,3 @@ function playGame() {
   whoWins();
 }
 
-playGame();
-playGame();
-playGame();
-playGame();
-playGame();
