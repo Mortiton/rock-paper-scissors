@@ -3,6 +3,29 @@
     src: url('./fonts/slkscr.ttf')
   }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
+
 body {
     font-family: "Silkscreen", serif;
     background-color: black;
@@ -15,8 +38,6 @@ body {
     margin: 0;
     color: white;
 }
-
-
 
 #game-container {
     background-image: url('./images/rps-background.png');
@@ -32,9 +53,41 @@ body {
     align-items: center;
 }
 
-#text {
+#game-text {
     margin: 100px 0;
-    font-size: 24px;
+    font-size: 32px;
     color: white;
 }
 
+#play-btn,
+#no-btn {
+    height: 90px;
+    width: 110px;
+    border: none;
+    cursor: pointer;
+    margin-top: 150px;
+
+
+}
+
+#play-btn {
+    background: url(./images/okBtn.png);
+    margin-right: 150px;;
+    animation: fadeIn 2s, shake 0.5s 2s infinite;
+}
+
+#no-btn {
+    background: url(./images/noBtn.png);
+    margin-left: 150px;
+    animation: fadeIn 2s;
+}
+
+#fine-btn {
+    background: url(./images/fine-btn.png);
+    height: 70px;
+    width: 330px;
+    border: none;
+    cursor: pointer;
+    margin-top: 150px;
+    animation: fadeIn 2s;
+}

@@ -40,11 +40,15 @@ function playGame() {
   whoWins();
 }
 
+//DOM constants
 const typedText = document.querySelector("#typed-text");
+const gameDiv = document.querySelector("#screen");
+const buttonDiv = document.querySelector("#btn-container")
 
-//typing effect with a promise. This is so I can ensure the text is displayed before a button is created
+
+//typing effect
 function typeWriter(text) {
-  return new Promise((resolve, reject) => {
+
     let charIndex = 0;
     const speed = 50;
 
@@ -53,27 +57,56 @@ function typeWriter(text) {
         typedText.textContent += text.charAt(charIndex);
         charIndex++;
         setTimeout(type, speed);
-      } else {
-        resolve();
-      }
     }
+  };
 
     type();
-  });
+  };
+
+  //remove typed text
+  function removeText(){
+    typedText.textContent="";
+  }
+
+  //play Buttons - main screen
+const playBtn = document.createElement("button");
+const noBtn = document.createElement("button");
+const fineBtn = document.createElement("button");
+playBtn.setAttribute("id", "play-btn");
+noBtn.setAttribute("id", "no-btn");
+fineBtn.setAttribute("id","fine-btn");
+
+//Starting screen
+typeWriter("Do you want to play a game?");
+setTimeout(() => {
+  buttonDiv.appendChild(playBtn);
+  buttonDiv.appendChild(noBtn);
+}, 2000); //delayed by 2s (1000ms = 1s)
+
+//Play buttons
+
+
+
+//Play button click function
+function playBtnClicked() {
+  console.log("okay button pressed")
 }
 
-//starting text
-document.addEventListener('DOMContentLoaded', () => {
-typeWriter("Do you want to play a game?").then(() => {
+//No button click function
+function noBtnClicked() {
+  buttonDiv.removeChild(playBtn);
+  buttonDiv.removeChild(noBtn);
+  removeText();
+  typeWriter("Okay :(");
   setTimeout(() => {
-    //select the button
-    const button = document.querySelector("#play-btn");
-    button.textContent = "Test";
-    const gameDiv = document.querySelector("#game-container");
-    gameDiv.appendChild(button);
+  buttonDiv.appendChild(fineBtn);
+  }, 1000); //delayed by one second (1000ms = 1s)
+};
 
-    typedText.focus();
-  }, 1000); //delay the button display by 1 second
-});
-});
-//Create a button
+//Button event listeners
+playBtn.addEventListener('click', playBtnClicked)
+noBtn.addEventListener('click', noBtnClicked)
+
+
+
+
