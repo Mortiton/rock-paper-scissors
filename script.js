@@ -1,108 +1,176 @@
 //GAME LOGIC
-const gameChoices = ["rock", "paper", "scissors"];
+const GAME_CHOICES = ["rock", "paper", "scissors"];
+let playerChoice = "";
+let playerScore = 0;
+let computerScore = 0;
 
 //Determine the random choice by selecting a number between 0 and 2. This refers to an index in the array
 function getComputerChoice() {
   let computerChoice =
-    gameChoices[Math.floor(Math.random() * gameChoices.length)];
+    GAME_CHOICES[Math.floor(Math.random() * GAME_CHOICES.length)];
 
   return computerChoice;
 }
-
-//Prompts the user to input their choice and converts it to lowercase
-function getPlayerChoice() {
-  let playerChoice = prompt("What do you pick?");
-
-  return playerChoice.toLowerCase();
+console.log(GAME_CHOICES.length);
+//set player choice
+function playerChoiceClicked() {
+  switch (this.id) {
+    case "rock-btn":
+      playerChoice = "rock";
+      break;
+    case "paper-btn":
+      playerChoice = "paper";
+      break;
+    case "scissor-btn":
+      playerChoice = "scissors";
+      break;
+  }
+  whoWins();
 }
 
 //determine the outcome based on computer and player choices
 function whoWins() {
   let computerChoice = getComputerChoice();
-  let playerChoice = getPlayerChoice();
   //Player Wins
   if (
     (computerChoice == "rock" && playerChoice == "paper") ||
     (computerChoice == "paper" && playerChoice == "scissors") ||
     (computerChoice == "scissors" && playerChoice == "rock")
   ) {
-    return console.log(`Computer chose ${computerChoice}.` + " You win! :)");
+    changeText(`I Choose ${computerChoice}... Oh :(`).then(() => {
+      playerScore += 1;
+      playerScoreboard.textContent = "Player: " + playerScore;
+    });
   }
   //a tie
   else if (computerChoice == playerChoice) {
-    return console.log(`Computer chose ${computerChoice}.` + " Its a tie! :/");
+    changeText(`I Choose ${computerChoice}...Its a tie! :/ `);
     //Player loses
   } else {
-    return console.log(`Computer chose ${computerChoice}.` + " You lose! :(");
+    changeText(`I Choose ${computerChoice}...Woo! :D`).then(()=> {
+      computerScore += 1;
+      computerScoreboard.textContent = "Computer: " + computerScore;
+    })
   }
 }
 
-function playGame() {
-  whoWins();
-}
+// //Function for the computer text while playing. Display computer choice and an icon
+// function textDuringGame(computerChoice) {
+//   changeText(`I choose...${computerChoice}`)
+// }
+
+//DOM
 
 //DOM constants
+const DELAY_TIME = 2000;
 const typedText = document.querySelector("#typed-text");
 const gameDiv = document.querySelector("#screen");
 const buttonDiv = document.querySelector("#btn-container");
+//Scoreboard
+const playerScoreboard = document.querySelector("#player-score");
+const computerScoreboard = document.querySelector("#computer-score");
+//Icon
+const iconSpan = document.querySelector("#icon-container");
 
-//play Buttons - main screen
-const playBtn = document.createElement("button");
-const noBtn = document.createElement("button");
-const fineBtn = document.createElement("button");
-playBtn.setAttribute("id", "play-btn");
-noBtn.setAttribute("id", "no-btn");
-fineBtn.setAttribute("id", "fine-btn");
+//BUTTONS
 
-//typing effect
-function typeWriter(text) {
-  let charIndex = 0;
-  const speed = 50;
-
-  function type() {
-    if (charIndex < text.length) {
-      typedText.textContent += text.charAt(charIndex);
-      charIndex++;
-      setTimeout(type, speed);
-    }
-  }
-  type();
+//Function to create buttons
+function createButton(id) {
+  button = document.createElement("button");
+  button.setAttribute("id", id);
+  return button;
 }
 
-//remove typed text
+// Function to append buttons
+function appendButtons(buttons) {
+  buttons.forEach((button) => buttonDiv.appendChild(button));
+}
+
+//Function to remove buttons
+function removeButtons(buttons) {
+  buttons.forEach((button) => buttonDiv.removeChild(button));
+}
+//create buttons
+const playBtn = createButton("play-btn");
+const noBtn = createButton("no-btn");
+const fineBtn = createButton("fine-btn");
+const rockBtn = createButton("rock-btn");
+const paperBtn = createButton("paper-btn");
+const scissorBtn = createButton("scissor-btn");
+
+//Add click events
+function addClickEvent(button, clickFunction) {
+  button.addEventListener("click", clickFunction);
+}
+
+//Button event listeners
+addClickEvent(playBtn, playBtnClicked);
+addClickEvent(noBtn, noBtnClicked);
+addClickEvent(fineBtn, playBtnClicked);
+addClickEvent(rockBtn, playerChoiceClicked);
+addClickEvent(paperBtn, playerChoiceClicked);
+addClickEvent(scissorBtn, playerChoiceClicked);
+
+//TEXT
+
+//Typing effect
+function typeWriter(text) {
+  return new Promise((resolve, reject) => {
+    let charIndex = 0;
+    const speed = 60;
+
+    function type() {
+      if (charIndex < text.length) {
+        typedText.textContent += text.charAt(charIndex);
+        charIndex++;
+        setTimeout(type, speed);
+      } else {
+        resolve();
+      }
+    }
+    type();
+  });
+}
+
+//Remove typed text
 function removeText() {
   typedText.textContent = "";
 }
 
+//Change top typed text
+function changeText(text) {
+  return new Promise((resolve, reject) => {
+    removeText();
+    typeWriter(text).then(() => {
+      resolve();
+    });
+  });
+}
+
 //Starting screen
-typeWriter("Do you want to play a game?");
-setTimeout(() => {
-  buttonDiv.appendChild(playBtn);
-  buttonDiv.appendChild(noBtn);
-}, 2000); //delayed by 2s (1000ms = 1s)
+typeWriter("Do you want to play a game?").then(() => {
+  appendButtons([playBtn, noBtn]);
+});
+// setTimeout(() => {
+//   appendButtons([playBtn, noBtn]);
+// }, DELAY_TIME);
 
-//Choice Buttons
-const rockBtn = document.createElement("button");
-const paperBtn = document.createElement("button");
-const scissorBtn = document.createElement("button");
-rockBtn.setAttribute("id", "rock-btn");
-paperBtn.setAttribute("id", "paper-btn");
-scissorBtn.setAttribute("id", "scissor-btn");
-
-//Play button click function
+//Play or fine button click function
 function playBtnClicked() {
-  if (this.id == "play-btn") {
-    buttonDiv.removeChild(playBtn);
-    buttonDiv.removeChild(noBtn);
-  } else {
-    buttonDiv.removeChild(fineBtn);
+  switch (this.id) {
+    case "play-btn":
+      removeButtons([playBtn, noBtn]);
+      break;
+    case "fine-btn":
+      buttonDiv.removeChild(fineBtn);
+      break;
   }
   removeText();
-  typeWriter("Yay! Now which do you pick?");
-  buttonDiv.appendChild(rockBtn);
-  buttonDiv.appendChild(paperBtn);
-  buttonDiv.appendChild(scissorBtn);
-
+  typeWriter("Yay! Now make your choice.").then(() => {
+    appendButtons([rockBtn, paperBtn, scissorBtn]);
+    playerScoreboard.textContent = "Player: " + playerScore;
+    computerScoreboard.textContent = "Computer: " + computerScore;
+  });
 }
 
 //No button click function
@@ -110,13 +178,7 @@ function noBtnClicked() {
   buttonDiv.removeChild(playBtn);
   buttonDiv.removeChild(noBtn);
   removeText();
-  typeWriter("Okay :(");
-  setTimeout(() => {
+  typeWriter("Okay :(").then(() => {
     buttonDiv.appendChild(fineBtn);
-  }, 1000); //delayed by one second (1000ms = 1s)
+  });
 }
-
-//Button event listeners
-playBtn.addEventListener("click", playBtnClicked);
-noBtn.addEventListener("click", noBtnClicked);
-fineBtn.addEventListener("click", playBtnClicked);

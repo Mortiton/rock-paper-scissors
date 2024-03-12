@@ -1,28 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="./styles.css">
-        <title>Computer wants to play</title>
-        <!-- <script src="./script.js"></script> -->
-    </head>
-    <body>
-    <div id="container"></div>
-    <div id="header"><h1>Beat the Computer.</h1></div>
 
-            <div id="game-container">
-                <div id="game-text">
-                    <span id="typed-text"></span>
-                </div>
-                <div id="btn-container">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Computer wants to play</title>
+    <!-- <script src="./script.js"></script> -->
+</head>
 
-                </div>
-                
+<body>
+    <div id="header">
+        <h1>Beat the Computer</h1>
+        <p>Best out of five</p>
+    </div>
 
-
-            </div>
+    <div id="game-container">
+        <div id="game-text">
+            <span id="typed-text"></span> <span id='keyboard-cursor'>|</span> <span id="icon-container"></span>
+        </div>
+        <div id="btn-container">
+        </div>
+        <div id="score-text">
+            <span id="player-score"></span>
+            <span id="computer-score"></span>
         </div>
 
-        <script src="./script.js"></script>
-    </body>
+
+    </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+
 </html>
