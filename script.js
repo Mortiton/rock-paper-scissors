@@ -1,9 +1,10 @@
-//An array which contains the computers choices in the game
+//GAME LOGIC
 const gameChoices = ["rock", "paper", "scissors"];
 
 //Determine the random choice by selecting a number between 0 and 2. This refers to an index in the array
 function getComputerChoice() {
-  let computerChoice = gameChoices[Math.floor(Math.random() * 3)];
+  let computerChoice =
+    gameChoices[Math.floor(Math.random() * gameChoices.length)];
 
   return computerChoice;
 }
@@ -30,7 +31,7 @@ function whoWins() {
   //a tie
   else if (computerChoice == playerChoice) {
     return console.log(`Computer chose ${computerChoice}.` + " Its a tie! :/");
-  //Player loses
+    //Player loses
   } else {
     return console.log(`Computer chose ${computerChoice}.` + " You lose! :(");
   }
@@ -43,38 +44,35 @@ function playGame() {
 //DOM constants
 const typedText = document.querySelector("#typed-text");
 const gameDiv = document.querySelector("#screen");
-const buttonDiv = document.querySelector("#btn-container")
+const buttonDiv = document.querySelector("#btn-container");
 
-
-//typing effect
-function typeWriter(text) {
-
-    let charIndex = 0;
-    const speed = 50;
-
-    function type() {
-      if (charIndex < text.length) {
-        typedText.textContent += text.charAt(charIndex);
-        charIndex++;
-        setTimeout(type, speed);
-    }
-  };
-
-    type();
-  };
-
-  //remove typed text
-  function removeText(){
-    typedText.textContent="";
-  }
-
-  //play Buttons - main screen
+//play Buttons - main screen
 const playBtn = document.createElement("button");
 const noBtn = document.createElement("button");
 const fineBtn = document.createElement("button");
 playBtn.setAttribute("id", "play-btn");
 noBtn.setAttribute("id", "no-btn");
-fineBtn.setAttribute("id","fine-btn");
+fineBtn.setAttribute("id", "fine-btn");
+
+//typing effect
+function typeWriter(text) {
+  let charIndex = 0;
+  const speed = 50;
+
+  function type() {
+    if (charIndex < text.length) {
+      typedText.textContent += text.charAt(charIndex);
+      charIndex++;
+      setTimeout(type, speed);
+    }
+  }
+  type();
+}
+
+//remove typed text
+function removeText() {
+  typedText.textContent = "";
+}
 
 //Starting screen
 typeWriter("Do you want to play a game?");
@@ -83,13 +81,28 @@ setTimeout(() => {
   buttonDiv.appendChild(noBtn);
 }, 2000); //delayed by 2s (1000ms = 1s)
 
-//Play buttons
-
-
+//Choice Buttons
+const rockBtn = document.createElement("button");
+const paperBtn = document.createElement("button");
+const scissorBtn = document.createElement("button");
+rockBtn.setAttribute("id", "rock-btn");
+paperBtn.setAttribute("id", "paper-btn");
+scissorBtn.setAttribute("id", "scissor-btn");
 
 //Play button click function
 function playBtnClicked() {
-  console.log("okay button pressed")
+  if (this.id == "play-btn") {
+    buttonDiv.removeChild(playBtn);
+    buttonDiv.removeChild(noBtn);
+  } else {
+    buttonDiv.removeChild(fineBtn);
+  }
+  removeText();
+  typeWriter("Yay! Now which do you pick?");
+  buttonDiv.appendChild(rockBtn);
+  buttonDiv.appendChild(paperBtn);
+  buttonDiv.appendChild(scissorBtn);
+
 }
 
 //No button click function
@@ -99,14 +112,11 @@ function noBtnClicked() {
   removeText();
   typeWriter("Okay :(");
   setTimeout(() => {
-  buttonDiv.appendChild(fineBtn);
+    buttonDiv.appendChild(fineBtn);
   }, 1000); //delayed by one second (1000ms = 1s)
-};
+}
 
 //Button event listeners
-playBtn.addEventListener('click', playBtnClicked)
-noBtn.addEventListener('click', noBtnClicked)
-
-
-
-
+playBtn.addEventListener("click", playBtnClicked);
+noBtn.addEventListener("click", noBtnClicked);
+fineBtn.addEventListener("click", playBtnClicked);

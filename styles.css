@@ -91,3 +91,32 @@ body {
     margin-top: 150px;
     animation: fadeIn 2s;
 }
+
+#button-container {
+    margin-right:16px;
+}
+
+#rock-btn {
+    background: url(./images/rock.png);
+}
+
+#paper-btn {
+    background: url(./images/paper.png);
+}
+
+#scissor-btn {
+    background: url(./images/scissors.png)
+}
+
+#rock-btn,
+#paper-btn,
+#scissor-btn {
+    height: 150px;
+    width: 160px;
+    gap: 8px;
+    margin: 0 16px;
+    border: none;
+    cursor: pointer;
+    animation: fadeIn 2s;
+}
+
