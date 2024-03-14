@@ -89,6 +89,7 @@ p {
 
 #game-text {
   margin: 100px 0;
+  text-align: center;
 }
 
 #typed-text {

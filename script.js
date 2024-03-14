@@ -19,86 +19,56 @@ function playerChoiceClicked() {
       playerChoice = "rock";
       break;
     case "paper-btn":
-      playerChoice = "paper";;
+      playerChoice = "paper";
       break;
     case "scissor-btn":
-      playerChoice = "scissors";;
+      playerChoice = "scissors";
       break;
   }
   whoWins();
 }
 
-//Assigns the fade-out class so that elements are faded to opacity 0. A promise is used to ensure 
-//the transitions ends before additional code is run.
-function assignClass(elements, newClass) {
-  return new Promise((resolve, reject) => {
-    elements.forEach((element) => {
-      element.classList.add(newClass);
-      element.addEventListener('transitionend', resolve, { once: true });
-    });
-  });
-}
-
-function displayWinner(winner) {
-  //fade the elements out from the screen
-    assignClass([rockBtn,paperBtn,scissorBtn, typedText, playerScoreboard, computerScoreboard, cursor], "fade-out").then(()=>{;
-  //Remove elements from the screen
-    removeText();
-    cursor.textContent ="";
-    removeButtons([rockBtn, paperBtn, scissorBtn]);
-    playerScoreboard.textContent = "";
-    computerScoreboard.textContent = "";
-
-    //Display Winner
-    buttonDiv.id='winner-text'
-    buttonDiv.textContent= `${winner} wins!`
-})
-}
-
-function checkScore(){
+function checkScore() {
   const delayTime = 1000;
   if (playerScore >= 1) {
     setTimeout(() => {
-    displayWinner("Player");
-    }, delayTime); 
+      displayWinner("Player");
+    }, delayTime);
+  } else if (computerScore >= 1) {
+    setTimeout(() => {
+      displayWinner("Computer");
+    }, delayTime);
+    removeClickEvent([rockBtn, paperBtn, scissorBtn], playerChoiceClicked);
   }
-  else if (computerScore >=1){
-    setTimeout(()=> { 
-    displayWinner("Computer");
-  }, delayTime);
-  removeClickEvent([rockBtn, paperBtn, scissorBtn], playerChoiceClicked); 
-}
 }
 //determine the outcome based on computer and player choices
 function whoWins() {
   let computerChoice = getComputerChoice();
   //Player Wins
 
-    if (
-      (computerChoice == "rock" && playerChoice == "paper") ||
-      (computerChoice == "paper" && playerChoice == "scissors") ||
-      (computerChoice == "scissors" && playerChoice == "rock")
-    ) {
-      changeText(`I Choose ${computerChoice}... Oh :(`).then(() => {
-        playerScore += 1;
-        playerScoreboard.textContent = "Player: " + playerScore;
-        checkScore();
-      });
-    }
-    //a tie
-    else if (computerChoice == playerChoice) {
-      changeText(`I Choose ${computerChoice}...Its a tie! :/ `);
-      //Player loses
-    } else {
-      changeText(`I Choose ${computerChoice}...Woo! :D`).then(() => {
-        computerScore += 1;
-        computerScoreboard.textContent = "Computer: " + computerScore;
-        checkScore();
-      });
-    }
+  if (
+    (computerChoice == "rock" && playerChoice == "paper") ||
+    (computerChoice == "paper" && playerChoice == "scissors") ||
+    (computerChoice == "scissors" && playerChoice == "rock")
+  ) {
+    changeText(`I Choose ${computerChoice}... Oh :(`).then(() => {
+      playerScore += 1;
+      playerScoreboard.textContent = "Player: " + playerScore;
+      checkScore();
+    });
   }
-
-
+  //a tie
+  else if (computerChoice == playerChoice) {
+    changeText(`I Choose ${computerChoice}...Its a tie! :/ `);
+    //Player loses
+  } else {
+    changeText(`I Choose ${computerChoice}...Woo! :D`).then(() => {
+      computerScore += 1;
+      computerScoreboard.textContent = "Computer: " + computerScore;
+      checkScore();
+    });
+  }
+}
 
 //DOM
 
@@ -126,75 +96,104 @@ function appendButtons(buttons) {
   buttons.forEach((button) => buttonDiv.appendChild(button));
 }
 
-//Function to remove buttons
-function removeButtons(buttons) {
-  buttons.forEach((button) => buttonDiv.removeChild(button));
+//Function to remove buttons from container
+function removeButtons(buttons, container) {
+  buttons.forEach((button) => container.removeChild(button));
 }
 //create buttons
 const playBtn = createButton("play-btn");
 const noBtn = createButton("no-btn");
 const fineBtn = createButton("fine-btn");
+//during game
 const rockBtn = createButton("rock-btn");
 const paperBtn = createButton("paper-btn");
 const scissorBtn = createButton("scissor-btn");
+//after a game has been plauyed
+const playAgainBtn = createButton("play-btn");
+const noBtnAgain = createButton("no-btn");
 
 //Add click events
-function addClickEvent(button, clickFunction) {
-  button.addEventListener("click", clickFunction);
+function addClickEvent(buttons, clickFunction) {
+  buttons.forEach((button) => button.addEventListener("click", clickFunction));
 }
 
 //remove click Events
-function removeClickEvent(buttons, clickFunction){
-  buttons.forEach((button) => button.removeEventListener("click", clickFunction));
+function removeClickEvent(buttons, clickFunction) {
+  buttons.forEach((button) =>
+    button.removeEventListener("click", clickFunction)
+  );
 }
 
 //Button event listeners
-addClickEvent(playBtn, playBtnClicked);
-addClickEvent(noBtn, noBtnClicked);
-addClickEvent(fineBtn, playBtnClicked);
-addClickEvent(rockBtn, playerChoiceClicked);
-addClickEvent(paperBtn, playerChoiceClicked);
-addClickEvent(scissorBtn, playerChoiceClicked);
+addClickEvent([playBtn, fineBtn], playBtnClicked);
+addClickEvent([noBtn], noBtnClicked);
+// addClickEvent(fineBtn, playBtnClicked);
+addClickEvent([rockBtn, paperBtn, scissorBtn], playerChoiceClicked);
+// addClickEvent(paperBtn, playerChoiceClicked);
+// addClickEvent(scissorBtn, playerChoiceClicked);
 
 //Play or fine button click function
 function playBtnClicked() {
   switch (this.id) {
     case "play-btn":
-      removeButtons([playBtn, noBtn]);
+      removeButtons([playBtn, noBtn], buttonDiv);
       break;
     case "fine-btn":
       buttonDiv.removeChild(fineBtn);
       break;
   }
-  removeText();
-  typeWriter("Yay! Now make your choice.").then(() => {
-    appendButtons([rockBtn, paperBtn, scissorBtn]);
-    playerScoreboard.textContent = "Player: " + playerScore;
-    computerScoreboard.textContent = "Computer: " + computerScore;
+  generatePlayScreen();
+}
+
+//Assigns the fade-out class so that elements are faded to opacity 0. A promise is used to ensure
+//the transitions ends before additional code is run.
+function assignClass(elements, newClass) {
+  return new Promise((resolve, reject) => {
+    elements.forEach((element) => {
+      element.classList.add(newClass);
+      element.addEventListener("transitionend", resolve, { once: true });
+    });
   });
 }
 
-//No button click function
+function removeClass(elements, removeClass) {
+  elements.forEach((element) => {
+    element.classList.remove(removeClass);
+  });
+}
+
+//No button click function when first player
 function noBtnClicked() {
-  buttonDiv.removeChild(playBtn);
-  buttonDiv.removeChild(noBtn);
-  removeText();
-  typeWriter("Okay :(").then(() => {
-    buttonDiv.appendChild(fineBtn);
-  });
+  removeButtons([playBtn, noBtn], buttonDiv);
+  fineScreen();
 }
 
+//Play Again button
+function playAgainClicked() {
+  cursor.textContent= "|";
+  typedText.id = "typed-text";
+
+  removeButtons([playAgainBtn, noBtnAgain], typedText);
+  generatePlayScreen();
+}
+function noAgainClicked() {
+  cursor.textContent= "|";
+  typedText.id = "typed-text";
+
+  removeButtons([playAgainBtn, noBtnAgain], typedText);
+  fineScreen();
+}
 //TEXT
 
 //Typing effect
-function typeWriter(text) {
+function typeWriter(element, text) {
   return new Promise((resolve, reject) => {
     let charIndex = 0;
     const speed = 60;
 
     function type() {
       if (charIndex < text.length) {
-        typedText.textContent += text.charAt(charIndex);
+        element.textContent += text.charAt(charIndex);
         charIndex++;
         setTimeout(type, speed);
       } else {
@@ -214,13 +213,78 @@ function removeText() {
 function changeText(text) {
   return new Promise((resolve, reject) => {
     removeText();
-    typeWriter(text).then(() => {
+    typeWriter(typedText, text).then(() => {
       resolve();
     });
   });
 }
 
 //Starting screen
-typeWriter("Do you want to play a game?").then(() => {
+typeWriter(typedText, "Do you want to play a game?").then(() => {
   appendButtons([playBtn, noBtn]);
 });
+
+//Fine screen after you click no
+function fineScreen() {
+  removeText();
+  typeWriter(typedText, "Okay :(").then(() => {
+    buttonDiv.appendChild(fineBtn);
+  });
+  addClickEvent([paperBtn,rockBtn,scissorBtn])
+}
+
+//game Screen
+function generatePlayScreen() {
+  removeClass(
+    [rockBtn, paperBtn, scissorBtn, playerScoreboard, computerScoreboard],
+    "fade-out"
+  );
+  removeText();
+  typeWriter(typedText, "Yay! Now make your choice.").then(() => {
+    appendButtons([rockBtn, paperBtn, scissorBtn]);
+    playerScoreboard.textContent = "Player: " + playerScore;
+    computerScoreboard.textContent = "Computer: " + computerScore;
+  });
+}
+
+//Winner Screen
+function displayWinner(winner) {
+  //fade the elements out from the screen
+  assignClass(
+    [
+      rockBtn,
+      paperBtn,
+      scissorBtn,
+      typedText,
+      playerScoreboard,
+      computerScoreboard,
+      cursor,
+    ],
+    "fade-out"
+  ).then(() => {
+    //Remove elements from the screen
+    removeText();
+    cursor.textContent = "";
+    removeButtons([rockBtn, paperBtn, scissorBtn], buttonDiv);
+    playerScoreboard.textContent = "";
+    computerScoreboard.textContent = "";
+
+    //Display Winner
+    typedText.id = "winner-text";
+    typedText.classList.remove("fade-out");
+    typedText.textContent = `${winner} wins!`;
+
+    //Play again
+    const playAgain = document.createElement("p");
+    typedText.appendChild(playAgain);
+    typeWriter(playAgain, "want to player again?");
+
+    //click events
+    addClickEvent([playAgainBtn], playAgainClicked);
+    addClickEvent([noBtnAgain], noAgainClicked);
+
+    //buttons
+    typedText.appendChild(playAgainBtn);
+    typedText.appendChild(noBtnAgain);
+  });
+}
