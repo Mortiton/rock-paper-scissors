@@ -29,17 +29,26 @@ function playerChoiceClicked() {
 }
 
 function checkScore() {
-  const delayTime = 1000;
-  if (playerScore >= 1) {
-    setTimeout(() => {
-      displayWinner("Player");
-    }, delayTime);
-  } else if (computerScore >= 1) {
-    setTimeout(() => {
-      displayWinner("Computer");
-    }, delayTime);
+  const DELAY_TIME = 1000;
+  if (playerScore == 5 || computerScore == 5) {
     removeClickEvent([rockBtn, paperBtn, scissorBtn], playerChoiceClicked);
   }
+  if (playerScore >= 5) {
+    setTimeout(() => {
+      displayWinner("Player");
+    }, DELAY_TIME);
+  } else if (computerScore >= 5) {
+    setTimeout(() => {
+      displayWinner("Computer");
+    }, DELAY_TIME);
+  }
+}
+
+function resetGame() {
+  playerScore = 0;
+  computerScore = 0;
+  playerScoreboard.textContent = "Player: " + playerScore;
+  computerScoreboard.textContent = "Computer: " + computerScore;
 }
 //determine the outcome based on computer and player choices
 function whoWins() {
@@ -128,7 +137,7 @@ function removeClickEvent(buttons, clickFunction) {
 addClickEvent([playBtn, fineBtn], playBtnClicked);
 addClickEvent([noBtn], noBtnClicked);
 // addClickEvent(fineBtn, playBtnClicked);
-addClickEvent([rockBtn, paperBtn, scissorBtn], playerChoiceClicked);
+
 // addClickEvent(paperBtn, playerChoiceClicked);
 // addClickEvent(scissorBtn, playerChoiceClicked);
 
@@ -170,14 +179,14 @@ function noBtnClicked() {
 
 //Play Again button
 function playAgainClicked() {
-  cursor.textContent= "|";
+  cursor.textContent = "|";
   typedText.id = "typed-text";
 
   removeButtons([playAgainBtn, noBtnAgain], typedText);
   generatePlayScreen();
 }
 function noAgainClicked() {
-  cursor.textContent= "|";
+  cursor.textContent = "|";
   typedText.id = "typed-text";
 
   removeButtons([playAgainBtn, noBtnAgain], typedText);
@@ -230,7 +239,7 @@ function fineScreen() {
   typeWriter(typedText, "Okay :(").then(() => {
     buttonDiv.appendChild(fineBtn);
   });
-  addClickEvent([paperBtn,rockBtn,scissorBtn])
+  addClickEvent([paperBtn, rockBtn, scissorBtn]);
 }
 
 //game Screen
@@ -239,9 +248,12 @@ function generatePlayScreen() {
     [rockBtn, paperBtn, scissorBtn, playerScoreboard, computerScoreboard],
     "fade-out"
   );
+
   removeText();
+  addClickEvent([rockBtn, paperBtn, scissorBtn], playerChoiceClicked);
   typeWriter(typedText, "Yay! Now make your choice.").then(() => {
     appendButtons([rockBtn, paperBtn, scissorBtn]);
+    resetGame();
     playerScoreboard.textContent = "Player: " + playerScore;
     computerScoreboard.textContent = "Computer: " + computerScore;
   });
@@ -277,7 +289,7 @@ function displayWinner(winner) {
     //Play again
     const playAgain = document.createElement("p");
     typedText.appendChild(playAgain);
-    typeWriter(playAgain, "want to player again?");
+    typeWriter(playAgain, "want to play again?");
 
     //click events
     addClickEvent([playAgainBtn], playAgainClicked);
