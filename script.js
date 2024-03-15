@@ -12,8 +12,13 @@ function getComputerChoice() {
   return computerChoice;
 }
 
-//set player choice
+//set player choice via click event
 function playerChoiceClicked() {
+  //if isTying is true returns nothing - no player choice is returned while typing effect is in play.
+  if (isTyping) {
+    return;
+  }
+
   switch (this.id) {
     case "rock-btn":
       playerChoice = "rock";
@@ -28,6 +33,7 @@ function playerChoiceClicked() {
   whoWins();
 }
 
+// Checks the score with a delay time of 1s (1000ms = 1s) The delay ensures a smoothly transition between screens
 function checkScore() {
   const DELAY_TIME = 1000;
   if (playerScore == 5 || computerScore == 5) {
@@ -44,23 +50,25 @@ function checkScore() {
   }
 }
 
+//Resets the game screen, score and scoreboard text
 function resetGame() {
   playerScore = 0;
   computerScore = 0;
   playerScoreboard.textContent = "Player: " + playerScore;
   computerScoreboard.textContent = "Computer: " + computerScore;
 }
+
 //determine the outcome based on computer and player choices
 function whoWins() {
   let computerChoice = getComputerChoice();
-  //Player Wins
 
+  //Player Wins
   if (
     (computerChoice == "rock" && playerChoice == "paper") ||
     (computerChoice == "paper" && playerChoice == "scissors") ||
     (computerChoice == "scissors" && playerChoice == "rock")
   ) {
-    changeText(`I Choose ${computerChoice}... Oh :(`).then(() => {
+    changeText(`I Choose ${computerChoice}! You Win! :(`).then(() => {
       playerScore += 1;
       playerScoreboard.textContent = "Player: " + playerScore;
       checkScore();
@@ -68,10 +76,10 @@ function whoWins() {
   }
   //a tie
   else if (computerChoice == playerChoice) {
-    changeText(`I Choose ${computerChoice}...Its a tie! :/ `);
+    changeText(`I Choose ${computerChoice}! A tie! `);
     //Player loses
   } else {
-    changeText(`I Choose ${computerChoice}...Woo! :D`).then(() => {
+    changeText(`I Choose ${computerChoice}! I Win! :D`).then(() => {
       computerScore += 1;
       computerScoreboard.textContent = "Computer: " + computerScore;
       checkScore();
@@ -82,10 +90,14 @@ function whoWins() {
 //DOM
 
 //DOM declarations
+
+//containers
 const typedText = document.querySelector("#typed-text");
 const gameDiv = document.querySelector("#screen");
 const buttonDiv = document.querySelector("#btn-container");
 const gameContainer = document.querySelector("#game-container");
+
+//keyboard cursor
 const cursor = document.querySelector("#keyboard-cursor");
 //Scoreboard
 const playerScoreboard = document.querySelector("#player-score");
@@ -109,6 +121,7 @@ function appendButtons(buttons) {
 function removeButtons(buttons, container) {
   buttons.forEach((button) => container.removeChild(button));
 }
+
 //create buttons
 const playBtn = createButton("play-btn");
 const noBtn = createButton("no-btn");
@@ -117,7 +130,7 @@ const fineBtn = createButton("fine-btn");
 const rockBtn = createButton("rock-btn");
 const paperBtn = createButton("paper-btn");
 const scissorBtn = createButton("scissor-btn");
-//after a game has been plauyed
+//after a game has been played
 const playAgainBtn = createButton("play-btn");
 const noBtnAgain = createButton("no-btn");
 
@@ -126,7 +139,7 @@ function addClickEvent(buttons, clickFunction) {
   buttons.forEach((button) => button.addEventListener("click", clickFunction));
 }
 
-//remove click Events
+//Remove click events
 function removeClickEvent(buttons, clickFunction) {
   buttons.forEach((button) =>
     button.removeEventListener("click", clickFunction)
@@ -136,10 +149,6 @@ function removeClickEvent(buttons, clickFunction) {
 //Button event listeners
 addClickEvent([playBtn, fineBtn], playBtnClicked);
 addClickEvent([noBtn], noBtnClicked);
-// addClickEvent(fineBtn, playBtnClicked);
-
-// addClickEvent(paperBtn, playerChoiceClicked);
-// addClickEvent(scissorBtn, playerChoiceClicked);
 
 //Play or fine button click function
 function playBtnClicked() {
@@ -165,19 +174,20 @@ function assignClass(elements, newClass) {
   });
 }
 
+//Removes a class from an element
 function removeClass(elements, removeClass) {
   elements.forEach((element) => {
     element.classList.remove(removeClass);
   });
 }
 
-//No button click function when first player
+//No button click function when first played
 function noBtnClicked() {
   removeButtons([playBtn, noBtn], buttonDiv);
   fineScreen();
 }
 
-//Play Again button
+//Play Again button is for after a game has finished
 function playAgainClicked() {
   cursor.textContent = "|";
   typedText.id = "typed-text";
@@ -185,6 +195,7 @@ function playAgainClicked() {
   removeButtons([playAgainBtn, noBtnAgain], typedText);
   generatePlayScreen();
 }
+//No again button is for after a game has finished
 function noAgainClicked() {
   cursor.textContent = "|";
   typedText.id = "typed-text";
@@ -192,13 +203,19 @@ function noAgainClicked() {
   removeButtons([playAgainBtn, noBtnAgain], typedText);
   fineScreen();
 }
+
 //TEXT
+
+//Variables
+let isTyping = false;
 
 //Typing effect
 function typeWriter(element, text) {
   return new Promise((resolve, reject) => {
     let charIndex = 0;
     const speed = 60;
+    isTyping = true;
+    
 
     function type() {
       if (charIndex < text.length) {
@@ -207,13 +224,14 @@ function typeWriter(element, text) {
         setTimeout(type, speed);
       } else {
         resolve();
+        isTyping = false;
       }
     }
     type();
   });
 }
 
-//Remove typed text
+//Remove typed text from typedText container
 function removeText() {
   typedText.textContent = "";
 }
